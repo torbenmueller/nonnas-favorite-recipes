@@ -1,5 +1,7 @@
 "use client"
 
+"use client"
+
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, Clock, Users, Utensils, Minus, Plus } from "lucide-react"
@@ -8,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CardImage } from "@/components/ui/card-image"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
+import { Header } from "@/components/header"
 import { recipes } from "@/data/recipes"
 
 export default function RecipePage() {
@@ -23,7 +26,8 @@ export default function RecipePage() {
       <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Recipe not found</h1>
-          <Button onClick={() => router.push("/")}>
+          {/* Back Navigation */}
+          <Button variant="outline" onClick={() => router.push("/")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Recipes
           </Button>
@@ -57,31 +61,11 @@ export default function RecipePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-yellow-50 to-amber-50">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-amber-100 to-orange-200 shadow-lg border-b-4 border-orange-400">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
-                <img src="/images/Nonna.png" alt="Nonna" className="w-16 h-16" />
-              </div>
-              <div>
-                <div className="flex items-center gap-4">
-                  <h1 className="text-4xl font-bold text-gray-900 font-['Lobster']">Nonna's Favorite Recipes</h1>
-                  <div className="w-8 h-6 flex">
-                      <div className="w-4 h-6 bg-green-600"></div>
-                      <div className="w-4 h-6 bg-white border-y border-gray-300"></div>
-                      <div className="w-4 h-6 bg-red-600"></div>
-                  </div>
-                </div>
-                <span className="text-lg text-gray-600">Authentic Italian Recipes</span>
-              </div>
-            </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Navigation */}
-        <Button variant="ghost" onClick={() => router.push("/")} className="mb-6">
+        <Button variant="outline" onClick={() => router.push("/")} className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Recipes
         </Button>
@@ -186,7 +170,9 @@ export default function RecipePage() {
           </CardContent>
         </Card>
       </main>
-      <Footer />
+      <Footer onCategorySelect={function (category: string): void {
+        throw new Error("Function not implemented.")
+      } } />
     </div>
   )
 }

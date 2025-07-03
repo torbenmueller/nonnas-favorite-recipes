@@ -1,13 +1,18 @@
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
+import { cn } from "@/lib/utils"
 
-export function Footer() {
+interface FooterProps {
+  onCategorySelect: (category: string) => void
+}
+
+export function Footer({ onCategorySelect }: FooterProps) {
   const currentYear = format(new Date(), 'yyyy')
 
   return (
     <footer className="bg-gradient-to-r from-amber-100 to-orange-200 border-t-2 border-orange-300 mt-16">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
@@ -22,19 +27,19 @@ export function Footer() {
               traditional recipes passed down through generations.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
+              <Link href="https://www.facebook.com/profile.php?id=100071947813879" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
+              <Link href="https://www.instagram.com/steve_vaii73/" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
+              <Link href="https://x.com/TorbenJan" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
+              <Link href="https://www.youtube.com/@torbenjanmuller1485" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
                 <Youtube className="h-5 w-5" />
                 <span className="sr-only">YouTube</span>
               </Link>
@@ -46,36 +51,75 @@ export function Footer() {
             <h4 className="text-lg font-semibold text-gray-900">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
+                  e.preventDefault()
+                  onCategorySelect("All")
+                }}>
                   All Recipes
                 </Link>
               </li>
               <li>
-                <Link href="/?category=Pasta" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
+                  e.preventDefault()
+                  onCategorySelect("Pasta")
+                }}>
                   Pasta Recipes
                 </Link>
               </li>
               <li>
-                <Link href="/?category=Pizza" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
+                  e.preventDefault()
+                  onCategorySelect("Pizza")
+                }}>
                   Pizza Recipes
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/?category=Desserts"
+                  href="/"
                   className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onCategorySelect("Risotto")
+                  }}
+                >
+                  Risotto Recipes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onCategorySelect("Antipasti")
+                  }}
+                >
+                  Antipasti Recipes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onCategorySelect("Desserts")
+                  }}
                 >
                   Italian Desserts
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  Cooking Tips
+                <Link
+                  href="/"
+                  className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onCategorySelect("Soups")
+                  }}
+                >
+                  Italian Soups
                 </Link>
               </li>
             </ul>
@@ -104,8 +148,30 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Newsletter */}
+           {/* Legal Information */}
           <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-900">Legal Information</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/legal/privacy-policy" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/terms-and-conditions" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/imprint" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                  Imprint
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          {/* <div className="space-y-4">
             <h4 className="text-lg font-semibold text-gray-900">Stay Updated</h4>
             <p className="text-gray-600 text-sm">Subscribe to our newsletter for new recipes and cooking tips!</p>
             <div className="space-y-2">
@@ -118,27 +184,13 @@ export function Footer() {
                 Subscribe
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Section */}
         <div className="border-t border-orange-300 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
             <div className="text-gray-600 text-sm">© {currentYear} Nonna's Favorite Recipes. All rights reserved.</div>
-            <div className="flex flex-wrap gap-6 text-sm">
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
-                Cookie Policy
-              </Link>
-              <Link href="#" className="text-gray-600 hover:text-orange-600 transition-colors">
-                Legal Notice
-              </Link>
-            </div>
           </div>
         </div>
       </div>

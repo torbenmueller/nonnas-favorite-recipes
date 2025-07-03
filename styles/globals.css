@@ -92,3 +92,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .margin-left-30 {
+    margin-left: 30px;
+  }
+}

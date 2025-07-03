@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
+import { Header } from '@/components/header'
+
 import { CardImage } from "@/components/ui/card-image"
 import { Input } from "@/components/ui/input"
 import { ChangeEvent } from "react"
@@ -45,6 +47,10 @@ export default function HomePage() {
     setFeaturedRecipes(recipes.slice(0, 4))
   }, [])
 
+  const handleCategorySelect = (category: typeof categories[number]) => {
+    setSelectedCategory(category)
+  }
+
   // Filter recipes based on category and search
   const filteredRecipes = recipes.filter((recipe: Recipe) => {
     const matchesCategory = selectedCategory === "All" || recipe.category === selectedCategory
@@ -78,40 +84,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-yellow-50 to-amber-50">
-      <header className="bg-gradient-to-r from-amber-100 to-orange-200 shadow-lg border-b-4 border-orange-400">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
-                <img src="/images/Nonna.png" alt="Nonna" className="w-16 h-16" />
-              </div>
-              <div>
-                <div className="flex items-center gap-4">
-                  <h1 className="text-4xl font-bold text-gray-900 font-['Lobster']">Nonna's Favorite Recipes</h1>
-                  <div className="w-8 h-6 flex">
-                      <div className="w-4 h-6 bg-green-600"></div>
-                      <div className="w-4 h-6 bg-white border-y border-gray-300"></div>
-                      <div className="w-4 h-6 bg-red-600"></div>
-                  </div>
-                </div>
-                <span className="text-lg text-gray-600">Authentic Italian Recipes</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Input
-                placeholder="Search recipes..."
-                value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                className="max-w-[400px]"
-              />
-              <Button onClick={handleRandomRecipe} className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700">
-                <Dices className="mr-2 h-4 w-4" />
-                Random Recipe
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        searchQuery={searchQuery}
+        onSearchChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+        onRandomRecipe={handleRandomRecipe}
+      />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
@@ -141,7 +118,7 @@ export default function HomePage() {
         </div>
 
         {/* Featured Recipes */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <h3 className="text-2xl font-bold mb-6">Featured Recipes</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredRecipes.map((recipe: Recipe) => (
@@ -162,7 +139,7 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Recipe Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -224,7 +201,7 @@ export default function HomePage() {
         )}
       </main>
 
-      <Footer />
+          <Footer onCategorySelect={handleCategorySelect} />
     </div>
   )
 }
