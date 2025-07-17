@@ -67,14 +67,6 @@ export function Footer({ onCategorySelect }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
-                  e.preventDefault()
-                  onCategorySelect("Pizza")
-                }}>
-                  Pizza Recipes
-                </Link>
-              </li>
-              <li>
                 <Link
                   href="/"
                   className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
@@ -96,18 +88,6 @@ export function Footer({ onCategorySelect }: FooterProps) {
                   }}
                 >
                   Antipasti Recipes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/"
-                  className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    onCategorySelect("Desserts")
-                  }}
-                >
-                  Italian Desserts
                 </Link>
               </li>
               <li>

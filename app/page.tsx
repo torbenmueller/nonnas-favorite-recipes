@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { Header } from '@/components/header'
+import Image from "next/image"
 
 import { CardImage } from "@/components/ui/card-image"
 import { Input } from "@/components/ui/input"
@@ -91,12 +92,26 @@ export default function HomePage() {
       />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Discover the Flavors of Italy</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            From traditional pasta dishes to authentic pizzas, explore our collection of time-honored Italian recipes
-            passed down through generations.
-          </p>
+        {/* Flavors of Italy Text and Image Side by Side */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-8">
+          <div className="md:w-1/2 w-full">
+            <span className="text-lg text-gray-600">Authentic Italian Recipes</span>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              Discover the Flavors of Italy
+              <Image src="/images/it.svg" alt="Italian flag" width={32} height={32} />
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl">
+              From traditional pasta dishes to delicious soups, explore our collection of time-honored Italian recipes
+              passed down through generations.
+            </p>
+          </div>
+          <div className="md:w-1/2 w-full flex justify-center">
+            <img
+              src="/images/tomatoes-321671_1920.jpg"
+              alt="Flavors of Italy"
+              
+            />
+          </div>
         </div>
 
         {/* Category Filter */}
