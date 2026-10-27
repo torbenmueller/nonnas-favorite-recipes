@@ -1,6 +1,6 @@
 "use client"
 
-import { Dices, Search } from 'lucide-react'
+import { Dices, Search, Plus } from 'lucide-react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import Link from 'next/link'
@@ -44,6 +44,14 @@ export function Header({ searchQuery = '', onSearchChange, onRandomRecipe }: Hea
                   />
                 </div>
               )}
+              <Link href="/recipe/new" className="w-full sm:w-auto">
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white border-0 whitespace-nowrap w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Recipe
+                </Button>
+              </Link>
               {onRandomRecipe && (
                 <Button 
                   onClick={onRandomRecipe} 
