@@ -11,16 +11,12 @@ import {
   type User,
 } from "firebase/auth"
 import { Header } from "@/components/header"
+import { RecipeForm } from "@/components/recipe-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { getRecipeAuth } from "@/lib/firebase"
 import { createRecipe } from "@/lib/recipes"
-
-type IngredientInput = { name: string; amount: string; unit: string; customUnit?: string }
-
-const UNIT_OPTIONS = ["g", "kg", "ml", "l", "tsp", "tbsp", "cup", "pinch", "whole"] as const
 
 export default function NewRecipePage() {
   const router = useRouter()
@@ -28,15 +24,6 @@ export default function NewRecipePage() {
   const [authLoading, setAuthLoading] = useState(true)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [title, setTitle] = useState("")
-  const [category, setCategory] = useState("")
-  const [cookTime, setCookTime] = useState("")
-  const [servings, setServings] = useState("")
-  const [difficulty, setDifficulty] = useState("Easy")
-  const [description, setDescription] = useState("")
-  const [ingredients, setIngredients] = useState<IngredientInput[]>([{ name: "", amount: "", unit: "" }])
-  const [instructions, setInstructions] = useState([""])
-  const [image, setImage] = useState<File | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
@@ -104,53 +91,6 @@ export default function NewRecipePage() {
     }
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (!user || !image) return
-    setError("")
-    setMessage("")
-    if (!["image/jpeg", "image/png", "image/webp"].includes(image.type) || image.size === 0 || image.size > 5 * 1024 * 1024) {
-      setError("Choose a JPEG, PNG, or WebP image no larger than 5 MiB.")
-      return
-    }
-    const parsedIngredients = ingredients.map((item) => ({
-      name: item.name.trim(),
-      amount: Number(item.amount),
-      unit: (item.unit === "custom" ? item.customUnit ?? "" : item.unit).trim(),
-    }))
-    const parsedInstructions = instructions.map((step) => step.trim())
-    if (!title.trim() || !category.trim() || !description.trim() ||
-      parsedIngredients.some((item, index) => !item.name || !ingredients[index].amount.trim() || !Number.isFinite(item.amount) || item.amount < 0 ||
-        (ingredients[index].unit === "custom" && !item.unit)) ||
-      parsedInstructions.some((step) => !step) ||
-      !cookTime.trim() || !Number.isFinite(Number(cookTime)) || Number(cookTime) < 0 ||
-      !servings.trim() || !Number.isFinite(Number(servings)) || Number(servings) <= 0) {
-      setError("Please complete all recipe fields with valid values.")
-      return
-    }
-    setBusy(true)
-    try {
-      const id = await createRecipe({
-        title: title.trim(),
-        category: category.trim(),
-        cookTime: Number(cookTime),
-        servings: Number(servings),
-        difficulty,
-        description: description.trim(),
-        ingredients: parsedIngredients,
-        instructions: parsedInstructions,
-      }, image, user.uid)
-      router.push(`/recipe/?id=${encodeURIComponent(id)}`)
-    } catch (err) {
-      console.error("Recipe creation failed:", err)
-      setError(err instanceof Error && err.message.startsWith("The recipe could not be saved after")
-        ? err.message
-        : "Could not upload the image or save the recipe. Check that your verified email is allowed in both Firebase rules and try again.")
-    } finally {
-      setBusy(false)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-yellow-50 to-amber-50">
       <Header />
@@ -178,63 +118,19 @@ export default function NewRecipePage() {
                 <Button type="button" disabled={busy} onClick={handleVerification}>Send verification email</Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div><Label htmlFor="title">Title</Label><Input id="title" required maxLength={200} value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                <div><Label htmlFor="category">Category</Label><Input id="category" required maxLength={100} value={category} onChange={(e) => setCategory(e.target.value)} /></div>
-                <div><Label htmlFor="description">Description</Label><Textarea id="description" required maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} /></div>
-                <div><Label htmlFor="cookTime">Cooking time (minutes)</Label><Input id="cookTime" type="number" min="0" step="1" required value={cookTime} onChange={(e) => setCookTime(e.target.value)} /></div>
-                <div><Label htmlFor="servings">Servings</Label><Input id="servings" type="number" min="1" step="1" required value={servings} onChange={(e) => setServings(e.target.value)} /></div>
-                <div>
-                  <Label htmlFor="difficulty">Difficulty</Label>
-                  <select id="difficulty" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-                    <option>Easy</option><option>Medium</option><option>Hard</option>
-                  </select>
-                </div>
-                <div><Label htmlFor="image">Recipe image (JPEG, PNG or WebP, max 5 MiB)</Label><Input id="image" type="file" accept="image/jpeg,image/png,image/webp" required onChange={(e) => setImage(e.target.files?.[0] ?? null)} /></div>
-                <fieldset className="space-y-3">
-                  <legend className="font-semibold">Ingredients</legend>
-                  {ingredients.map((item, index) => (
-                    <div key={index} className="grid gap-2 sm:grid-cols-4">
-                      <Input aria-label={`Ingredient ${index + 1} name`} placeholder="Name" required value={item.name} onChange={(e) => setIngredients(ingredients.map((entry, i) => i === index ? { ...entry, name: e.target.value } : entry))} />
-                      <Input aria-label={`Ingredient ${index + 1} amount`} placeholder="Amount" type="number" min="0" step="any" required value={item.amount} onChange={(e) => setIngredients(ingredients.map((entry, i) => i === index ? { ...entry, amount: e.target.value } : entry))} />
-                      <div className="space-y-2">
-                        <select
-                          aria-label={`Ingredient ${index + 1} unit`}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2"
-                          value={item.unit && !UNIT_OPTIONS.some((unit) => unit === item.unit) ? "custom" : item.unit}
-                          onChange={(e) => setIngredients(ingredients.map((entry, i) => i === index ? { ...entry, unit: e.target.value } : entry))}
-                        >
-                          <option value="">Unit</option>
-                          {UNIT_OPTIONS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}
-                          <option value="custom">Custom...</option>
-                        </select>
-                        {item.unit === "custom" && (
-                          <Input
-                            aria-label={`Ingredient ${index + 1} custom unit`}
-                            placeholder="Custom unit (e.g. oz)"
-                            required
-                            value={item.customUnit ?? ""}
-                            onChange={(e) => setIngredients(ingredients.map((entry, i) => i === index ? { ...entry, customUnit: e.target.value } : entry))}
-                          />
-                        )}
-                      </div>
-                      <Button type="button" variant="outline" disabled={ingredients.length === 1} onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}>Remove</Button>
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={() => setIngredients([...ingredients, { name: "", amount: "", unit: "" }])}>Add ingredient</Button>
-                </fieldset>
-                <fieldset className="space-y-3">
-                  <legend className="font-semibold">Instructions</legend>
-                  {instructions.map((step, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Textarea aria-label={`Instruction ${index + 1}`} required value={step} onChange={(e) => setInstructions(instructions.map((entry, i) => i === index ? e.target.value : entry))} />
-                      <Button type="button" variant="outline" disabled={instructions.length === 1} onClick={() => setInstructions(instructions.filter((_, i) => i !== index))}>Remove</Button>
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={() => setInstructions([...instructions, ""])}>Add instruction</Button>
-                </fieldset>
-                <Button type="submit" disabled={busy}>{busy ? "Saving recipe..." : "Save recipe"}</Button>
-              </form>
+              <RecipeForm
+                imageRequired
+                submitLabel="Save recipe"
+                savingLabel="Saving recipe..."
+                errorMessage="Could not upload the image or save the recipe. Check that your verified email is allowed in both Firebase rules and try again."
+                onBusyChange={setBusy}
+                onSave={async (data, image) => {
+                  if (!user || !image) throw new Error("A signed-in user and recipe image are required.")
+                  setMessage("")
+                  const id = await createRecipe(data, image, user.uid)
+                  router.push(`/recipe/?id=${encodeURIComponent(id)}`)
+                }}
+              />
             )}
           </>
         )}

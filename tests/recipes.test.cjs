@@ -23,6 +23,10 @@ function loadRecipes(options = {}) {
       calls.push(["setDoc", document.id, recipe])
       if (options.saveError) throw options.saveError
     },
+    updateDoc: async (document, recipe) => {
+      calls.push(["updateDoc", document.id, recipe])
+      if (options.updateError) throw options.updateError
+    },
   }
   const storageSdk = {
     ref: (_storage, name) => ({ fullPath: name }),
@@ -82,6 +86,31 @@ test("reports a potentially orphaned image if saving fails", async () => {
   const api = loadRecipes({ saveError: new Error("permission denied") })
   await assert.rejects(api.createRecipe(recipe, {}, "user1"), /image was uploaded/)
   assert.equal(api.calls.some((call) => call[0] === "error"), true)
+})
+
+test("updates recipe details while retaining the current image", async () => {
+  const api = loadRecipes()
+  const updated = await api.updateRecipe("recipe_1", { ...recipe, title: "Updated recipe" }, "/current-image.jpg", null, "user1")
+  assert.equal(updated.title, "Updated recipe")
+  assert.equal(updated.image, "/current-image.jpg")
+  assert.equal(api.calls[0][0], "updateDoc")
+  assert.equal(api.calls[0][1], "recipe_1")
+})
+
+test("uploads a replacement image before updating the recipe", async () => {
+  const api = loadRecipes()
+  const image = { type: "image/png" }
+  const updated = await api.updateRecipe("recipe_1", recipe, "/current-image.jpg", image, "user1")
+  assert.equal(api.calls[0][0], "uploadBytes")
+  assert.equal(api.calls[0][1], "recipe-images/user1/generatedRecipeId")
+  assert.equal(api.calls[1][0], "updateDoc")
+  assert.equal(updated.image, "https://example.test/image")
+})
+
+test("validates an update before uploading or writing", async () => {
+  const api = loadRecipes()
+  await assert.rejects(api.updateRecipe("recipe_1", { ...recipe, servings: 0 }, "/image.jpg", {}, "user1"))
+  assert.equal(api.calls.length, 0)
 })
 
 test("validates a recipe before uploading", async () => {

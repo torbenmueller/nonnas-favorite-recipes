@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { getRecipeDatabase, getRecipeStorage } from "@/lib/firebase"
 
@@ -59,4 +59,39 @@ export async function createRecipe(data: Omit<Recipe, "id" | "image">, image: Fi
     throw new Error("The recipe could not be saved after the image was uploaded. Check Firebase permissions and remove any unused image in Storage before retrying.", { cause: error })
   }
   return document.id
+}
+
+export async function updateRecipe(
+  id: string,
+  data: Omit<Recipe, "id" | "image">,
+  currentImage: string,
+  image: File | null,
+  userId: string,
+): Promise<Recipe> {
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) {
+    throw new Error("Invalid recipe id")
+  }
+
+  const document = doc(getRecipeDatabase(), "recipes", id)
+  const recipe = recipeSchema.parse({ ...data, id, image: currentImage })
+  let uploadedImageRef: ReturnType<typeof ref> | undefined
+
+  if (image) {
+    const imageDocument = doc(collection(getRecipeDatabase(), "recipe-images"))
+    uploadedImageRef = ref(getRecipeStorage(), `recipe-images/${userId}/${imageDocument.id}`)
+    await uploadBytes(uploadedImageRef, image, { contentType: image.type })
+    recipe.image = await getDownloadURL(uploadedImageRef)
+  }
+
+  try {
+    await updateDoc(document, recipe)
+  } catch (error) {
+    if (uploadedImageRef) {
+      console.error("Recipe update failed after image upload; the uploaded image may need removal in Firebase Storage:", uploadedImageRef.fullPath, error)
+      throw new Error("The recipe could not be updated after the image was uploaded. Check Firebase permissions and remove any unused image in Storage before retrying.", { cause: error })
+    }
+    throw error
+  }
+
+  return recipe
 }

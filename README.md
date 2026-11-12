@@ -16,16 +16,17 @@ can sign in and add recipes and images from the website.
    The allowlist below, not the absence of a sign-up page, protects writes.
 3. Set up Firebase Storage and create the default bucket. Check current Firebase
    Storage billing requirements and quotas before enabling it.
-4. In **both** `firestore.rules` and `storage.rules`, replace the empty list
-   in `request.auth.token.email in []` with the exact administrator email
-   addresses, for example `in ['admin@example.com']`. Keep both lists
-   identical. An empty list denies all writes.
+4. Set the exact administrator email addresses in the allowlists in
+   `firestore.rules`, `storage.rules`, and `ADMIN_EMAILS` in
+   `app/recipe/page.tsx`. Keep all three lists consistent, for example
+   `['admin@example.com']`. An empty rules allowlist denies Firebase writes.
 5. Publish `firestore.rules` in the Firestore **Rules** tab and
    `storage.rules` in the Storage **Rules** tab. Recipe data and images are
    publicly readable. Only signed-in users with a verified email on the
    allowlist can create recipes and upload JPEG, PNG, or WebP images up to
-   5 MiB. Browser updates and deletes are denied; use the Firebase console
-   to edit or delete existing data. Do not use test-mode rules in production.
+   5 MiB. Verified administrators can create and edit recipe documents;
+   deletes are denied in the browser, so use the Firebase console to delete
+   recipes. Do not use test-mode rules in production.
 6. Copy `.env.example` to `.env.local` and fill in the web app configuration
    values from Firebase project settings. These `NEXT_PUBLIC_` values are
    embedded in the site when it is built and are not secrets. Never put a
@@ -57,8 +58,10 @@ maps with `name` (string), `amount` (number), and `unit` (string);
 or suitable public image URLs. Images uploaded through the form are stored in
 Firebase Storage. Their download URLs are public; do not upload private images.
 If an image uploads but saving the recipe fails, the page reports this and
-the unused image may need to be removed in the Storage console. Deleting a
-recipe in the console does not automatically delete its image.
+the unused image may need to be removed in the Storage console. Replacing an
+image uploads a new file, leaving the previous file unused; remove it from
+Storage when appropriate. Deleting a recipe in the console does not
+automatically delete its image.
 
 ## Develop and deploy
 

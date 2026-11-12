@@ -3,21 +3,38 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Clock, Users, Utensils, Minus, Plus } from "lucide-react"
+import { onAuthStateChanged, type User } from "firebase/auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CardImage } from "@/components/ui/card-image"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
-import { getRecipe, type Recipe } from "@/lib/recipes"
+import { RecipeForm } from "@/components/recipe-form"
+import { getRecipeAuth } from "@/lib/firebase"
+import { getRecipe, type Recipe, updateRecipe } from "@/lib/recipes"
 import Link from "next/link"
+
+const ADMIN_EMAILS = ["torben.jan.mueller@gmail.com"]
 
 export default function RecipePage() {
   const router = useRouter()
   const [recipe, setRecipe] = useState<Recipe | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [editing, setEditing] = useState(false)
   const [servings, setServings] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    try {
+      return onAuthStateChanged(getRecipeAuth(), setUser, (err) => {
+        console.error("Authentication state could not be loaded:", err)
+      })
+    } catch (err) {
+      console.error("Firebase authentication could not be initialized:", err)
+    }
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -52,6 +69,7 @@ export default function RecipePage() {
   }
 
   const multiplier = servings / recipe.servings
+  const isAdmin = Boolean(user?.emailVerified && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase()))
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -79,7 +97,31 @@ export default function RecipePage() {
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
+        <div className="flex items-center justify-between gap-4">
+          <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
+          {isAdmin && !editing && <Button type="button" variant="outline" onClick={() => setEditing(true)}>Edit recipe</Button>}
+        </div>
+
+        {editing && user && (
+          <Card className="mt-6">
+            <CardHeader><CardTitle>Edit recipe</CardTitle></CardHeader>
+            <CardContent>
+              <RecipeForm
+                recipe={recipe}
+                submitLabel="Save changes"
+                savingLabel="Saving changes..."
+                errorMessage="Could not update the recipe. Check your Firebase permissions and try again."
+                onCancel={() => setEditing(false)}
+                onSave={async (data, image) => {
+                  const updatedRecipe = await updateRecipe(String(recipe.id), data, recipe.image, image, user.uid)
+                  setRecipe(updatedRecipe)
+                  setServings(updatedRecipe.servings)
+                  setEditing(false)
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recipe Header */}
         <div className="mb-8 mt-4">

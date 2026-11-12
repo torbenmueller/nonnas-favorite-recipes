@@ -7,10 +7,8 @@ service cloud.firestore {
         && request.auth.token.email in ['torben.jan.mueller@gmail.com'];
     }
 
-    match /recipes/{recipeId} {
-      allow read: if true;
-      allow create: if isAdmin()
-        && request.resource.data.keys().hasOnly([
+    function validRecipe(recipeId) {
+      return request.resource.data.keys().hasOnly([
           'id', 'title', 'category', 'image', 'cookTime', 'servings',
           'difficulty', 'description', 'ingredients', 'instructions'
         ])
@@ -26,7 +24,12 @@ service cloud.firestore {
         && request.resource.data.description is string
         && request.resource.data.ingredients is list
         && request.resource.data.instructions is list;
-      allow update, delete: if false;
+    }
+
+    match /recipes/{recipeId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validRecipe(recipeId);
+      allow delete: if false;
     }
   }
 }
