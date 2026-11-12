@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['torben.jan.mueller@gmail.com'];
+    }
+
+    match /recipes/{recipeId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'id', 'title', 'category', 'image', 'cookTime', 'servings',
+          'difficulty', 'description', 'ingredients', 'instructions'
+        ])
+        && request.resource.data.id == recipeId
+        && request.resource.data.title is string
+        && request.resource.data.category is string
+        && request.resource.data.image is string
+        && request.resource.data.cookTime is number
+        && request.resource.data.cookTime >= 0
+        && request.resource.data.servings is number
+        && request.resource.data.servings > 0
+        && request.resource.data.difficulty is string
+        && request.resource.data.description is string
+        && request.resource.data.ingredients is list
+        && request.resource.data.instructions is list;
+      allow update, delete: if false;
+    }
+  }
+}

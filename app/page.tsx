@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Clock, Users, Utensils, Search, Dices } from "lucide-react"
+import { Clock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -11,45 +11,36 @@ import { Header } from '@/components/header'
 import Image from "next/image"
 
 import { CardImage } from "@/components/ui/card-image"
-import { Input } from "@/components/ui/input"
-import { ChangeEvent } from "react"
-
-import { recipes } from "@/data/recipes"
-
-interface Recipe {
-  id: number
-  title: string
-  category: string
-  image: string
-  cookTime: number
-  servings: number
-  difficulty: string
-  description: string
-  ingredients: Array<{
-    name: string
-    amount: number
-    unit: string
-  }>
-  instructions: string[]
-}
-
-const categories = ["All", ...new Set(recipes.map((recipe: Recipe) => recipe.category))] as const
+import { getRecipes, type Recipe } from "@/lib/recipes"
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<typeof categories[number]>("All")
+  const [selectedCategory, setSelectedCategory] = useState("All")
   const [searchQuery, setSearchQuery] = useState("")
-  const [featuredRecipes, setFeaturedRecipes] = useState<Recipe[]>([])
-  const [loading, setLoading] = useState(false)
+  const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [page, setPage] = useState(1)
   const itemsPerPage = 12
+  const categories = ["All", ...new Set(recipes.map((recipe) => recipe.category))]
 
-  // Get featured recipes (first 4)
   useEffect(() => {
-    setFeaturedRecipes(recipes.slice(0, 4))
+    let active = true
+    const category = new URLSearchParams(window.location.search).get("category")
+    if (category) setSelectedCategory(category)
+    getRecipes().then((items) => {
+      if (active) setRecipes(items)
+    }).catch((err) => {
+      console.error("Could not load recipes:", err)
+      if (active) setError(true)
+    }).finally(() => {
+      if (active) setLoading(false)
+    })
+    return () => { active = false }
   }, [])
 
-  const handleCategorySelect = (category: typeof categories[number]) => {
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category)
+    setPage(1)
   }
 
   // Filter recipes based on category and search
@@ -79,16 +70,17 @@ export default function HomePage() {
   }
 
   const handleRandomRecipe = () => {
+    if (recipes.length === 0) return
     const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)]
-    window.location.href = `/recipe/${randomRecipe.id}`
+    window.location.href = `/recipe/?id=${randomRecipe.id}`
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-yellow-50 to-amber-50">
       <Header 
         searchQuery={searchQuery}
-        onSearchChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-        onRandomRecipe={handleRandomRecipe}
+        onSearchChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); setPage(1) }}
+        onRandomRecipe={recipes.length ? handleRandomRecipe : undefined}
       />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
@@ -116,11 +108,11 @@ export default function HomePage() {
 
         {/* Category Filter */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {categories.map((category: typeof categories[number]) => (
+          {categories.map((category) => (
             <Button
               key={category}
               variant={selectedCategory === category ? "default" : "outline"}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => handleCategorySelect(category)}
               className={
                 selectedCategory === category
                   ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700"
@@ -131,30 +123,6 @@ export default function HomePage() {
             </Button>
           ))}
         </div>
-
-        {/* Featured Recipes */}
-        {/* <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-6">Featured Recipes</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredRecipes.map((recipe: Recipe) => (
-              <Card key={recipe.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <CardHeader className="p-0">
-                  <CardImage src={recipe.image} alt={recipe.title} />
-                </CardHeader>
-                <CardContent className="p-4">
-                  <CardTitle className="text-xl">{recipe.title}</CardTitle>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <Link href={`/recipe/${recipe.id}`} className="w-full">
-                    <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
-                      View Recipe
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </div> */}
 
         {/* Recipe Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -190,7 +158,7 @@ export default function HomePage() {
                 </div>
               </CardContent>
               <CardFooter className="p-4 pt-0">
-                <Link href={`/recipe/${recipe.id}`} className="w-full">
+                <Link href={`/recipe/?id=${recipe.id}`} className="w-full">
                   <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
                     View Recipe
                   </Button>
@@ -209,7 +177,8 @@ export default function HomePage() {
             </Button>
           </div>
         )}
-        {paginatedRecipes.length === 0 && (
+        {error && <p role="alert" className="text-center text-red-700 py-8">Could not load recipes. Please try again later.</p>}
+        {!loading && !error && paginatedRecipes.length === 0 && (
           <div className="col-span-full text-center py-12">
             <p className="text-gray-600">No recipes found matching your search criteria.</p>
           </div>

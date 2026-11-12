@@ -1,9 +1,7 @@
 "use client"
 
-"use client"
-
-import { useState } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { ArrowLeft, Clock, Users, Utensils, Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,21 +9,41 @@ import { CardImage } from "@/components/ui/card-image"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
-import { recipes } from "@/data/recipes"
+import { getRecipe, type Recipe } from "@/lib/recipes"
 
 export default function RecipePage() {
-  const params = useParams()
   const router = useRouter()
-  const recipeId = Number.parseInt(params.id as string)
-  const recipe = recipes.find((r) => r.id === recipeId)
+  const [recipe, setRecipe] = useState<Recipe | null>(null)
+  const [servings, setServings] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  const [servings, setServings] = useState(recipe?.servings || 4)
+  useEffect(() => {
+    let active = true
+    const id = new URLSearchParams(window.location.search).get("id") ?? ""
+    getRecipe(id).then((item) => {
+      if (active) {
+        setRecipe(item)
+        if (item) setServings(item.servings)
+      }
+    }).catch((err) => {
+      console.error("Could not load recipe:", err)
+      if (active) setError(true)
+    }).finally(() => {
+      if (active) setLoading(false)
+    })
+    return () => { active = false }
+  }, [])
 
-  if (!recipe) {
+  if (loading) {
+    return <p className="text-center py-12" role="status">Loading recipe...</p>
+  }
+
+  if (error || !recipe) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Recipe not found</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{error ? "Could not load recipe. Please try again later." : "Recipe not found"}</h1>
           {/* Back Navigation */}
           <Button variant="outline" onClick={() => router.push("/")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -170,9 +188,7 @@ export default function RecipePage() {
           </CardContent>
         </Card>
       </main>
-      <Footer onCategorySelect={function (category: string): void {
-        throw new Error("Function not implemented.")
-      } } />
+      <Footer onCategorySelect={(category) => router.push(`/?category=${encodeURIComponent(category)}`)} />
     </div>
   )
 }
