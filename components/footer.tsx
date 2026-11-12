@@ -59,6 +59,11 @@ export function Footer({ onCategorySelect }: FooterProps) {
                 </Link>
               </li>
               <li>
+                <Link href="/recipe/new" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
+                  Add a Recipe
+                </Link>
+              </li>
+              <li>
                 <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
                   e.preventDefault()
                   onCategorySelect("Pasta")
@@ -151,7 +156,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
           </div>
 
           {/* Newsletter */}
-          {/* <div className="space-y-4">
+          <div className="space-y-4">
             <h4 className="text-lg font-semibold text-gray-900">Stay Updated</h4>
             <p className="text-gray-600 text-sm">Subscribe to our newsletter for new recipes and cooking tips!</p>
             <div className="space-y-2">
@@ -164,7 +169,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                 Subscribe
               </button>
             </div>
-          </div> */}
+          </div>
         </div>
 
         {/* Bottom Section */}

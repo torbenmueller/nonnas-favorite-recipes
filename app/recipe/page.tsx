@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { getRecipe, type Recipe } from "@/lib/recipes"
+import Link from "next/link"
 
 export default function RecipePage() {
   const router = useRouter()
@@ -44,11 +45,7 @@ export default function RecipePage() {
       <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">{error ? "Could not load recipe. Please try again later." : "Recipe not found"}</h1>
-          {/* Back Navigation */}
-          <Button variant="outline" onClick={() => router.push("/")}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Recipes
-          </Button>
+          <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
         </div>
       </div>
     )
@@ -82,14 +79,10 @@ export default function RecipePage() {
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Back Navigation */}
-        <Button variant="outline" onClick={() => router.push("/")} className="mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Recipes
-        </Button>
+        <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
 
         {/* Recipe Header */}
-        <div className="mb-8">
+        <div className="mb-8 mt-4">
           <CardImage src={recipe.image} alt={recipe.title} />
 
           <div className="flex flex-wrap items-center gap-3 my-4">
