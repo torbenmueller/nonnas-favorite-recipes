@@ -84,9 +84,9 @@ export default function HomePage() {
       />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between mb-12 gap-8">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-8">
           <div className="md:w-1/2 w-full">
-            <h1 className="text-8xl font-bold text-gray-600 italianno-regular">Benvenuti</h1>
+            <h1 className="text-gray-300 benvenuti">Benvenuti</h1>
             <span className="text-lg text-gray-600">Authentic Italian Recipes</span>
             <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               Discover the Flavors of Italy

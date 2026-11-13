@@ -26,7 +26,9 @@ can sign in and add recipes and images from the website.
    allowlist can create recipes and upload JPEG, PNG, or WebP images up to
    5 MiB. Verified administrators can create and edit recipe documents;
    deletes are denied in the browser, so use the Firebase console to delete
-   recipes. Do not use test-mode rules in production.
+   recipes. Republish the Firestore rules whenever `firestore.rules` changes;
+   uploading the website alone does not update them. Do not use test-mode
+   rules in production.
 6. Copy `.env.example` to `.env.local` and fill in the web app configuration
    values from Firebase project settings. These `NEXT_PUBLIC_` values are
    embedded in the site when it is built and are not secrets. Never put a
@@ -52,7 +54,8 @@ Firestore `recipes` collection; browser-created recipes use generated string
 document IDs that match their `id` field.
 
 Recipe fields `title`, `category`, `image`, `difficulty`, and `description` are
-strings; `cookTime` and `servings` are numbers; `ingredients` is an array of
+strings. `tip` is a string of up to 1000 characters; older recipes may omit it.
+`cookTime` and `servings` are numbers; `ingredients` is an array of
 maps with `name` (string), `amount` (number), and `unit` (string);
 `instructions` is an array of strings. Images can use paths in `public`
 or suitable public image URLs. Images uploaded through the form are stored in

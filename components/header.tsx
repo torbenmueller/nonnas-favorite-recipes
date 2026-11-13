@@ -24,7 +24,7 @@ export function Header({ searchQuery = '', onSearchChange, onRandomRecipe }: Hea
               </div>
               <div className="ml-[80px]">
                 <div className="flex items-center gap-4">
-                  <h1 className="text-2xl md:text-3xl font-serif font-bold tracking-wide">Nonna's Favorite Recipes</h1>
+                  <h1 className="text-5xl lobster-regular">Nonna's Favorite Recipes</h1>
                 </div>
               </div>
             </Link>

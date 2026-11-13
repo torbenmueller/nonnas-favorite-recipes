@@ -97,6 +97,20 @@ test("updates recipe details while retaining the current image", async () => {
   assert.equal(api.calls[0][1], "recipe_1")
 })
 
+test("saves recipe-specific tips when creating and updating recipes", async () => {
+  const api = loadRecipes()
+  await api.createRecipe({ ...recipe, tip: "Use fresh basil." }, {}, "user1")
+  assert.equal(api.calls.find((call) => call[0] === "setDoc")[2].tip, "Use fresh basil.")
+  const updated = await api.updateRecipe("recipe_1", { ...recipe, tip: "Salt the pasta water." }, "/image.jpg", null, "user1")
+  assert.equal(updated.tip, "Salt the pasta water.")
+  assert.equal(api.calls.find((call) => call[0] === "updateDoc")[2].tip, "Salt the pasta water.")
+})
+
+test("loads older recipes without a tip", async () => {
+  const api = loadRecipes({ document: { exists: () => true, id: "1", data: () => ({ ...recipe, id: 1, image: "/image.jpg" }) } })
+  assert.equal((await api.getRecipe("1")).tip, "")
+})
+
 test("uploads a replacement image before updating the recipe", async () => {
   const api = loadRecipes()
   const image = { type: "image/png" }

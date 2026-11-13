@@ -10,7 +10,7 @@ service cloud.firestore {
     function validRecipe(recipeId) {
       return request.resource.data.keys().hasOnly([
           'id', 'title', 'category', 'image', 'cookTime', 'servings',
-          'difficulty', 'description', 'ingredients', 'instructions'
+          'difficulty', 'description', 'tip', 'ingredients', 'instructions'
         ])
         && request.resource.data.id == recipeId
         && request.resource.data.title is string
@@ -22,6 +22,8 @@ service cloud.firestore {
         && request.resource.data.servings > 0
         && request.resource.data.difficulty is string
         && request.resource.data.description is string
+        && (!request.resource.data.keys().hasAny(['tip'])
+          || (request.resource.data.tip is string && request.resource.data.tip.size() <= 1000))
         && request.resource.data.ingredients is list
         && request.resource.data.instructions is list;
     }

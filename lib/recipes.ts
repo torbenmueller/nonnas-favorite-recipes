@@ -12,6 +12,7 @@ const recipeSchema = z.object({
   servings: z.number().positive(),
   difficulty: z.string().min(1),
   description: z.string(),
+  tip: z.string().max(1000).default(""),
   ingredients: z.array(z.object({
     name: z.string().min(1),
     amount: z.number().nonnegative(),

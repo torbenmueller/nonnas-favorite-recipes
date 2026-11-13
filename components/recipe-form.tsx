@@ -39,6 +39,7 @@ export function RecipeForm({
   const [servings, setServings] = useState(recipe ? String(recipe.servings) : "")
   const [difficulty, setDifficulty] = useState(recipe?.difficulty ?? "Easy")
   const [description, setDescription] = useState(recipe?.description ?? "")
+  const [tip, setTip] = useState(recipe?.tip ?? "")
   const [ingredients, setIngredients] = useState<IngredientInput[]>(recipe
     ? recipe.ingredients.map((ingredient) => ({
       name: ingredient.name,
@@ -62,7 +63,7 @@ export function RecipeForm({
       unit: (ingredient.unit === "custom" ? ingredient.customUnit : ingredient.unit).trim(),
     }))
     const parsedInstructions = instructions.map((instruction) => instruction.trim())
-    if (!title.trim() || !category.trim() || !description.trim() ||
+    if (!title.trim() || !category.trim() || !description.trim() || !tip.trim() ||
       parsedIngredients.some((ingredient, index) => !ingredient.name ||
         !ingredients[index].amount.trim() ||
         !Number.isFinite(ingredient.amount) ||
@@ -93,6 +94,7 @@ export function RecipeForm({
         servings: Number(servings),
         difficulty,
         description: description.trim(),
+        tip: tip.trim(),
         ingredients: parsedIngredients,
         instructions: parsedInstructions,
       }, image)
@@ -121,6 +123,10 @@ export function RecipeForm({
       <div>
         <Label htmlFor="recipe-description">Description</Label>
         <Textarea id="recipe-description" required maxLength={2000} value={description} onChange={(event) => setDescription(event.target.value)} />
+      </div>
+      <div>
+        <Label htmlFor="recipe-tip">Nonna's Tip</Label>
+        <Textarea id="recipe-tip" required maxLength={1000} value={tip} onChange={(event) => setTip(event.target.value)} />
       </div>
       <div>
         <Label htmlFor="recipe-cook-time">Cooking time (minutes)</Label>

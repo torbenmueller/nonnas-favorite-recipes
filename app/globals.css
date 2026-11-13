@@ -6,10 +6,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.lobster-regular {
+  font-family: "Lobster", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .italianno-regular {
   font-family: "Italianno", cursive;
   font-weight: 400;
   font-style: normal;
+}
+
+.benvenuti {
+  font-size: 8rem;
+  line-height: 1;
 }
 
 @layer utilities {

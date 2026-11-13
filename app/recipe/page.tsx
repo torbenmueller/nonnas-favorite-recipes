@@ -209,15 +209,15 @@ export default function RecipePage() {
         {/* Tips Section */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Nonna's Tips</CardTitle>
+            <CardTitle>Nonna's Tip</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <p className="text-gray-700">
-                <strong>Pro tip:</strong> For the best results with Italian cooking, always use high-quality
-                ingredients. Fresh herbs, good olive oil, and authentic Italian cheeses make all the difference in
-                flavor. Don't rush the cooking process - Italian cuisine is about taking time to let flavors develop
-                naturally.
+                {recipe.tip || "For the best results with Italian cooking, always use high-quality " +
+                "ingredients. Fresh herbs, good olive oil, and authentic Italian cheeses make all the difference in " +
+                "flavor. Don't rush the cooking process - Italian cuisine is about taking time to let flavors develop " +
+                "naturally."}
               </p>
             </div>
           </CardContent>
