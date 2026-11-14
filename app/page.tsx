@@ -83,19 +83,20 @@ export default function HomePage() {
         onRandomRecipe={recipes.length ? handleRandomRecipe : undefined}
       />
 
+      <div className="bg-image">
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-8">
           <div className="md:w-1/2 w-full">
-            <h1 className="text-gray-300 benvenuti">Benvenuti</h1>
             <span className="text-lg text-gray-600">Authentic Italian Recipes</span>
             <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               Discover the Flavors of Italy
               <Image src="/images/it.svg" alt="Italian flag" width={32} height={32} />
             </h2>
-            <p className="text-xl text-gray-900 max-w-2xl">
+            <p className="text-xl text-gray-900 max-w-2xl mb-8">
               From traditional pasta dishes to delicious soups, explore our collection of time-honored Italian recipes
               passed down through generations.
             </p>
+            <h1 className="text-orange-600 benvenuti mb-4">Buon appetito!</h1>
           </div>
           <div className="md:w-1/2 w-full flex justify-center">
             <img
@@ -139,17 +140,17 @@ export default function HomePage() {
               </CardHeader>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="outline" className="text-sm border-transparent bg-gray-200 text-gray-800">
                     {recipe.category}
                   </Badge>
-                  <Badge className={`text-xs ${getDifficultyColor(recipe.difficulty)}`}>{recipe.difficulty}</Badge>
+                  <Badge variant="outline" className={`text-sm border-transparent ${getDifficultyColor(recipe.difficulty)}`}>{recipe.difficulty}</Badge>
                 </div>
                 <CardTitle className="text-xl mb-2">{recipe.title}</CardTitle>
-                <p className="text-gray-600 text-sm mb-4">{recipe.description}</p>
+                <p className="text-gray-700 text-sm mb-4">{recipe.description}</p>
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span>{recipe.cookTime} min</span>
+                    <span>{recipe.cookTime} minutes</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
@@ -184,8 +185,8 @@ export default function HomePage() {
           </div>
         )}
       </main>
-
-          <Footer onCategorySelect={handleCategorySelect} />
+      <Footer onCategorySelect={handleCategorySelect} />
+      </div>
     </div>
   )
 }

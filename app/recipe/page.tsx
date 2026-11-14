@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Clock, Users, Utensils, Minus, Plus } from "lucide-react"
+import { Clock, Users, Minus, Plus, ChefHat } from "lucide-react"
 import { onAuthStateChanged, type User } from "firebase/auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -128,22 +128,22 @@ export default function RecipePage() {
           <CardImage src={recipe.image} alt={recipe.title} />
 
           <div className="flex flex-wrap items-center gap-3 my-4">
-            <Badge variant="secondary">{recipe.category}</Badge>
-            <Badge className={getDifficultyColor(recipe.difficulty)}>{recipe.difficulty}</Badge>
+            <Badge variant="outline" className="text-sm border-transparent bg-gray-200 text-gray-800">{recipe.category}</Badge>
+            <Badge variant="outline" className={`text-sm border-transparent ${getDifficultyColor(recipe.difficulty)}`}>{recipe.difficulty}</Badge>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{recipe.title}</h1>
 
-          <p className="text-lg text-gray-600 mb-6">{recipe.description}</p>
+          <p className="text-lg text-gray-700 mb-6">{recipe.description}</p>
 
-          <div className="flex items-center gap-6 text-gray-600">
+          <div className="flex items-center gap-6 text-gray-500">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
               <span>{recipe.cookTime} minutes</span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              <span>Serves {recipe.servings}</span>
+              <span>{recipe.servings} servings</span>
             </div>
           </div>
         </div>
@@ -209,7 +209,10 @@ export default function RecipePage() {
         {/* Tips Section */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Nonna's Tip</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <ChefHat className="h-8 w-8 text-amber-600" />
+              Nonna's Tip
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">

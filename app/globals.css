@@ -19,9 +19,31 @@ body {
 }
 
 .benvenuti {
-  font-size: 8rem;
-  line-height: 1;
+  font-size: 2rem;
+  text-box: trim-both cap alphabetic;
 }
+
+.bg-image {
+  position: relative;
+  isolation: isolate;
+}
+
+.bg-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("/images/istockphoto-885346190-1024x1024.jpg");
+  background-repeat: repeat;
+  opacity: 0.4;
+  mask-image: linear-gradient(to bottom, transparent, black);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+  pointer-events: none;
+}
+
+/* .card-title, .card-description, .card-content {
+  text-box: trim-both cap alphabetic;
+} */
 
 @layer utilities {
   .text-balance {
