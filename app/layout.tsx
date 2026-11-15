@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import '@fontsource/italianno'
 import '@fontsource/lobster'
+import { ScrollToTopOnBack } from '@/components/scroll-to-top-on-navigation'
 
 export const metadata: Metadata = {
   title: 'Nonna\'s Favorite Recipes',
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
+        <ScrollToTopOnBack />
         {children}
       </body>
     </html>

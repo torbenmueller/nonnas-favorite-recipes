@@ -35,9 +35,9 @@ body {
   z-index: -1;
   background-image: url("/images/istockphoto-885346190-1024x1024.jpg");
   background-repeat: repeat;
-  opacity: 0.4;
-  mask-image: linear-gradient(to bottom, transparent, black);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+  opacity: 0.2;
+  /* mask-image: linear-gradient(to bottom, transparent, black);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black); */
   pointer-events: none;
 }
 

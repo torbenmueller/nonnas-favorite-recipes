@@ -1,9 +1,9 @@
 "use client"
 
-import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
 
 export default function TermsAndConditionsPage() {
   const router = useRouter()
@@ -13,16 +13,12 @@ export default function TermsAndConditionsPage() {
       <Header />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Button 
-            variant="outline" 
-            onClick={() => router.back()} 
-            className="mb-6"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Previous Page
-          </Button>
+          <button type="button" onClick={() => {
+            scrollToTopOnNextNavigation()
+            router.back()
+          }} className="text-orange-700 underline">Back to previous page</button>
           
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 mt-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-900">Terms and Conditions</h1>
             <div className="prose prose-orange max-w-none">
               <h2>1. Acceptance of Terms</h2>
@@ -58,7 +54,7 @@ export default function TermsAndConditionsPage() {
 
               <h2>6. Contact Us</h2>
               <p>If you have any questions about these Terms and Conditions, please contact us at:</p>
-              <p>Email: info@nonnasrecipes.com</p>
+              <p>Email: info@nonnas-favorite-recipes.com</p>
             </div>
           </div>
         </div>

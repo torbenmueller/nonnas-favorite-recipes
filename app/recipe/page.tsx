@@ -54,7 +54,7 @@ export default function RecipePage() {
   }, [])
 
   if (loading) {
-    return <p className="text-center py-12" role="status">Loading recipe...</p>
+    return <p className="min-h-screen flex items-center justify-center text-center" role="status">Loading recipe...</p>
   }
 
   if (error || !recipe) {

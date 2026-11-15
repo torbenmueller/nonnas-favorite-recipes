@@ -1,7 +1,8 @@
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { cn } from "@/lib/utils"
+import { scrollToTop, scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
 
 interface FooterProps {
   onCategorySelect: (category: string) => void
@@ -9,6 +10,18 @@ interface FooterProps {
 
 export function Footer({ onCategorySelect }: FooterProps) {
   const currentYear = format(new Date(), 'yyyy')
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const selectCategory = (category: string) => {
+    if (pathname === "/") {
+      onCategorySelect(category)
+      scrollToTop()
+    } else {
+      scrollToTopOnNextNavigation()
+      router.push(`/?category=${encodeURIComponent(category)}`, { scroll: false })
+    }
+  }
 
   return (
     <footer className="bg-gradient-to-r from-amber-100 to-orange-200 border-t-2 border-orange-300 mt-16">
@@ -18,7 +31,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">N</span>
+                <span className="text-white font-bold text-lg">N</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900">Nonna's Favorite Recipes</h3>
             </div>
@@ -53,7 +66,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
               <li>
                 <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
                   e.preventDefault()
-                  onCategorySelect("All")
+                  selectCategory("All")
                 }}>
                   All Recipes
                 </Link>
@@ -66,7 +79,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
               <li>
                 <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
                   e.preventDefault()
-                  onCategorySelect("Pasta")
+                  selectCategory("Pasta")
                 }}>
                   Pasta Recipes
                 </Link>
@@ -77,7 +90,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                   className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
                   onClick={(e) => {
                     e.preventDefault()
-                    onCategorySelect("Risotto")
+                    selectCategory("Risotto")
                   }}
                 >
                   Risotto Recipes
@@ -89,7 +102,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                   className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
                   onClick={(e) => {
                     e.preventDefault()
-                    onCategorySelect("Antipasti")
+                    selectCategory("Antipasti")
                   }}
                 >
                   Antipasti Recipes
@@ -101,10 +114,22 @@ export function Footer({ onCategorySelect }: FooterProps) {
                   className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
                   onClick={(e) => {
                     e.preventDefault()
-                    onCategorySelect("Soups")
+                    selectCategory("Soups")
                   }}
                 >
                   Italian Soups
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-gray-600 hover:text-orange-600 transition-colors text-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    selectCategory("Desserts")
+                  }}
+                >
+                  Italian Desserts
                 </Link>
               </li>
             </ul>
@@ -116,7 +141,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-orange-600" />
-                <span className="text-gray-600 text-sm">info@nonnasfavorites.com</span>
+                <span className="text-gray-600 text-sm">info@nonnas-favorite-recipes.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-orange-600" />
@@ -159,16 +184,41 @@ export function Footer({ onCategorySelect }: FooterProps) {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-gray-900">Stay Updated</h4>
             <p className="text-gray-600 text-sm">Subscribe to our newsletter for new recipes and cooking tips!</p>
-            <div className="space-y-2">
+            <form
+              action="https://nonnas-favorite-recipes.us6.list-manage.com/subscribe/post?u=ab34b074927fdf20b97be28b5&amp;id=7f2ddad826&amp;f_id=001d5ee0f0"
+              method="post"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="space-y-2"
+            >
+              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
               <input
+                id="newsletter-email"
                 type="email"
+                name="EMAIL"
                 placeholder="Your email address"
+                autoComplete="email"
+                required
                 className="w-full px-3 py-2 border border-orange-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
-              <button className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:from-orange-700 hover:to-red-700 transition-colors">
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input type="checkbox" required className="mt-1" />
+                <span>
+                  I agree to receive the newsletter and have read the{" "}
+                  <Link href="/legal/privacy-policy" className="underline">Privacy Policy</Link>.
+                </span>
+              </label>
+              <div aria-hidden="true" className="absolute -left-[5000px]">
+                <input type="text" name="b_ab34b074927fdf20b97be28b5_7f2ddad826" tabIndex={-1} autoComplete="off" />
+              </div>
+              <button type="submit" className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:from-orange-700 hover:to-red-700 transition-colors">
                 Subscribe
               </button>
-            </div>
+              <p className="text-xs text-gray-600">Mailchimp will open in a new tab to complete your signup.</p>
+              <a href="http://eepurl.com/C8gAUoCryu" target="_blank" rel="noopener noreferrer" className="inline-block">
+                <img src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" width={220} height={40} />
+              </a>
+            </form>
           </div>
         </div>
 

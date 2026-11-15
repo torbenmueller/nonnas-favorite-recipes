@@ -1,9 +1,9 @@
 "use client"
 
-import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
 
 export default function ImprintPage() {
   const router = useRouter()
@@ -13,16 +13,12 @@ export default function ImprintPage() {
       <Header />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Button 
-            variant="outline" 
-            onClick={() => router.back()} 
-            className="mb-6"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Previous Page
-          </Button>
+          <button type="button" onClick={() => {
+            scrollToTopOnNextNavigation()
+            router.back()
+          }} className="text-orange-700 underline">Back to previous page</button>
           
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 mt-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-900">Imprint</h1>
             <div className="prose prose-orange max-w-none">
               <h2>Responsible for Content</h2>
@@ -33,7 +29,7 @@ export default function ImprintPage() {
               Germany</p>
 
               <h2>Contact Information</h2>
-              <p>Email: info@nonnasrecipes.com<br/>
+              <p>Email: info@nonnas-favorite-recipes.com<br/>
               Phone: +49 [Your Phone Number]</p>
 
               <h2>Commercial Register</h2>

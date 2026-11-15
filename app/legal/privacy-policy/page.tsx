@@ -1,9 +1,9 @@
 "use client"
 
-import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
 
 export default function PrivacyPolicyPage() {
   const router = useRouter()
@@ -13,16 +13,12 @@ export default function PrivacyPolicyPage() {
       <Header />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Button 
-            variant="outline" 
-            onClick={() => router.back()} 
-            className="mb-6"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Previous Page
-          </Button>
+          <button type="button" onClick={() => {
+            scrollToTopOnNextNavigation()
+            router.back()
+          }} className="text-orange-700 underline">Back to previous page</button>
           
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 mt-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-900">Privacy Policy</h1>
             <div className="prose prose-orange max-w-none">
               <h2>1. Introduction</h2>
@@ -45,7 +41,7 @@ export default function PrivacyPolicyPage() {
               </ul>
 
               <h2>4. Data Protection</h2>
-              <p>We take appropriate security measures to protect your personal information. We do not sell or share your information with third parties.</p>
+              <p>We take appropriate security measures to protect your personal information. Newsletter signup information is submitted to Mailchimp, which processes it to manage subscriptions and send newsletters.</p>
 
               <h2>5. Your Rights</h2>
               <p>You have the right to:</p>
@@ -60,7 +56,7 @@ export default function PrivacyPolicyPage() {
 
               <h2>7. Contact Us</h2>
               <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-              <p>Email: info@nonnasrecipes.com</p>
+              <p>Email: info@nonnas-favorite-recipes.com</p>
             </div>
           </div>
         </div>
