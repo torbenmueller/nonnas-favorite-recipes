@@ -21,37 +21,31 @@ export default function ImprintPage() {
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-900">Imprint</h1>
             <div className="prose prose-orange max-w-none">
-              <h2>Responsible for Content</h2>
-              <p>Nonna's Favorite Recipes<br/>
+              <h2 className="font-semibold mb-1">Responsible for Content</h2>
+              <p className="mb-4">Nonna's Favorite Recipes<br/>
               Torben Jan Müller<br/>
-              [Your Street Address]<br/>
-              [Your City, ZIP Code]<br/>
+              Am Hammershöfchen 23<br/>
+              45219 Essen<br/>
               Germany</p>
 
-              <h2>Contact Information</h2>
-              <p>Email: info@nonnas-favorite-recipes.com<br/>
-              Phone: +49 [Your Phone Number]</p>
+              <h2 className="font-semibold mb-1">Contact Information</h2>
+              <p className="mb-4">Email: <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a><br/>
+              Phone: +49 +49 151 284 720 59</p>
 
-              <h2>Commercial Register</h2>
-              <p>Entry in the commercial register: [Your Registration Number]<br/>
-              Register court: [Your Court]</p>
+              <h2 className="font-semibold mb-1">Responsible for Content according to § 55 Abs. 2 RStV</h2>
+              <p className="mb-4">Torben Jan Müller<br/>
+              Am Hammershöfchen 23<br/>
+              45219 Essen<br/>
+              Germany</p>
 
-              <h2>VAT ID</h2>
-              <p>VAT identification number: [Your VAT ID]</p>
+              <h2 className="font-semibold mb-1">Disclaimer</h2>
+              <p className="mb-4">The content of this website has been created with the utmost care. However, we cannot guarantee the accuracy, completeness, and timeliness of the information provided.</p>
 
-              <h2>Responsible for Content according to § 55 Abs. 2 RStV</h2>
-              <p>Torben Jan Müller<br/>
-              [Your Street Address]<br/>
-              [Your City, ZIP Code]</p>
+              <h2 className="font-semibold mb-1">External Links</h2>
+              <p className="mb-4">Our website contains links to external third-party websites. We have no influence on the content of these websites and cannot accept any liability for them.</p>
 
-              <h2>Disclaimer</h2>
-              <p>The content of this website has been created with the utmost care. However, we cannot guarantee the accuracy, completeness, and timeliness of the information provided.</p>
-
-              <h2>External Links</h2>
-              <p>Our website contains links to external third-party websites. We have no influence on the content of these websites and cannot accept any liability for them.</p>
-
-              <h2>Legal Notice</h2>
-              <p>This imprint was created using the <a href="https://www.impressum-generator.de" className="text-orange-600 hover:text-orange-700">Impressum Generator</a> of <a href="https://www.impressum-generator.de" className="text-orange-600 hover:text-orange-700">impressum-generator.de</a> and the <a href="https://www.anwaltskanzlei-weiss.de" className="text-orange-600 hover:text-orange-700">Law Office of Dr. Thomas Schwenke</a>.</p>
+              <h2 className="font-semibold mb-1">Legal Notice</h2>
+              <p>This imprint was created using the <a className="link" href="https://www.impressum-generator.de">Impressum Generator</a> of <a className="link" href="https://www.impressum-generator.de">impressum-generator.de</a> and the <a className="link" href="https://www.anwaltskanzlei-weiss.de">Law Office of Dr. Thomas Schwenke</a>.</p>
             </div>
           </div>
         </div>

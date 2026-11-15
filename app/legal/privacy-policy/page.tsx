@@ -21,42 +21,42 @@ export default function PrivacyPolicyPage() {
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-900">Privacy Policy</h1>
             <div className="prose prose-orange max-w-none">
-              <h2>1. Introduction</h2>
-              <p>Welcome to Nonna's Favorite Recipes. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.</p>
+              <h2 className="font-semibold mb-1">1. Introduction</h2>
+              <p className="mb-4">Welcome to Nonna's Favorite Recipes. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.</p>
 
-              <h2>2. Information We Collect</h2>
-              <p>We collect information that you provide to us directly, such as:</p>
-              <ul>
+              <h2 className="font-semibold mb-1">2. Information We Collect</h2>
+              <p className="mb-1">We collect information that you provide to us directly, such as:</p>
+              <ul className="mb-4 list-disc list-inside">
                 <li>Email address when you subscribe to our newsletter</li>
                 <li>Recipe ratings and reviews</li>
                 <li>Contact information if you reach out to us</li>
               </ul>
 
-              <h2>3. How We Use Your Information</h2>
-              <p>We use your information to:</p>
-              <ul>
+              <h2 className="font-semibold mb-1">3. How We Use Your Information</h2>
+              <p className="mb-1">We use your information to:</p>
+              <ul className="mb-4 list-disc list-inside">
                 <li>Send you our newsletter if you subscribe</li>
                 <li>Respond to your inquiries</li>
                 <li>Improve our website and services</li>
               </ul>
 
-              <h2>4. Data Protection</h2>
-              <p>We take appropriate security measures to protect your personal information. Newsletter signup information is submitted to Mailchimp, which processes it to manage subscriptions and send newsletters.</p>
+              <h2 className="font-semibold mb-1">4. Data Protection</h2>
+              <p className="mb-4">We take appropriate security measures to protect your personal information. Newsletter signup information is submitted to Mailchimp, which processes it to manage subscriptions and send newsletters.</p>
 
-              <h2>5. Your Rights</h2>
-              <p>You have the right to:</p>
-              <ul>
+              <h2 className="font-semibold mb-1">5. Your Rights</h2>
+              <p className="mb-1">You have the right to:</p>
+              <ul className="mb-4 list-disc list-inside">
                 <li>Access your personal information</li>
                 <li>Request corrections</li>
                 <li>Request deletion</li>
               </ul>
 
-              <h2>6. Updates to this Policy</h2>
-              <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page.</p>
+              <h2 className="font-semibold mb-1">6. Updates to this Policy</h2>
+              <p className="mb-4">We may update this Privacy Policy from time to time. Any changes will be posted on this page.</p>
 
-              <h2>7. Contact Us</h2>
+              <h2 className="font-semibold mb-1">7. Contact Us</h2>
               <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-              <p>Email: info@nonnas-favorite-recipes.com</p>
+              <p>Email: <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></p>
             </div>
           </div>
         </div>

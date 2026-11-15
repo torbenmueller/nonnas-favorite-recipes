@@ -1,7 +1,8 @@
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { format } from "date-fns"
+import { siFacebook, siInstagram, siX, siYoutube } from "simple-icons"
 import { scrollToTop, scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
 
 interface FooterProps {
@@ -41,19 +42,19 @@ export function Footer({ onCategorySelect }: FooterProps) {
             </p>
             <div className="flex space-x-4">
               <Link href="https://www.facebook.com/profile.php?id=100071947813879" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
-                <Facebook className="h-5 w-5" />
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={siFacebook.path} /></svg>
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link href="https://www.instagram.com/steve_vaii73/" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
-                <Instagram className="h-5 w-5" />
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={siInstagram.path} /></svg>
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link href="https://x.com/TorbenJan" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={siX.path} /></svg>
+                <span className="sr-only">X</span>
               </Link>
               <Link href="https://www.youtube.com/@torbenjanmuller1485" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
-                <Youtube className="h-5 w-5" />
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={siYoutube.path} /></svg>
                 <span className="sr-only">YouTube</span>
               </Link>
             </div>
@@ -141,7 +142,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-orange-600" />
-                <span className="text-gray-600 text-sm">info@nonnas-favorite-recipes.com</span>
+                <span className="text-gray-600 hover:text-orange-600 transition-colors text-sm"><a href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-orange-600" />
@@ -205,7 +206,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                 <input type="checkbox" required className="mt-1" />
                 <span>
                   I agree to receive the newsletter and have read the{" "}
-                  <Link href="/legal/privacy-policy" className="underline">Privacy Policy</Link>.
+                  <Link className="link" href="/legal/privacy-policy">Privacy Policy</Link>.
                 </span>
               </label>
               <div aria-hidden="true" className="absolute -left-[5000px]">
