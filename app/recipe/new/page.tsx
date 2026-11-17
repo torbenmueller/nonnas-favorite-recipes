@@ -17,8 +17,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { getRecipeAuth } from "@/lib/firebase"
 import { createRecipe } from "@/lib/recipes"
+import { useLanguage } from "@/lib/i18n"
 
 export default function NewRecipePage() {
+  const { t } = useLanguage()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
@@ -35,12 +37,12 @@ export default function NewRecipePage() {
         setAuthLoading(false)
       }, (err) => {
         console.error("Authentication state could not be loaded:", err)
-        setError("Could not check your sign-in. Please check the Firebase configuration and reload.")
+        setError(t("new.firebaseError"))
         setAuthLoading(false)
       })
     } catch (err) {
       console.error("Authentication configuration error:", err)
-      setError("Firebase is not configured. See the setup instructions.")
+      setError(t("new.firebaseConfigError"))
       setAuthLoading(false)
     }
   }, [])
@@ -55,7 +57,7 @@ export default function NewRecipePage() {
       setPassword("")
     } catch (err) {
       console.error("Sign-in failed:", err)
-      setError("Sign-in failed. Check your credentials and Firebase Authentication configuration.")
+      setError(t("new.signInError"))
     } finally {
       setBusy(false)
     }
@@ -69,7 +71,7 @@ export default function NewRecipePage() {
       await signOut(getRecipeAuth())
     } catch (err) {
       console.error("Sign-out failed:", err)
-      setError("Could not sign out. Please try again.")
+      setError(t("new.signOutError"))
     } finally {
       setBusy(false)
     }
@@ -82,10 +84,10 @@ export default function NewRecipePage() {
     setMessage("")
     try {
       await sendEmailVerification(user)
-      setMessage("Verification email sent. Open the link, then sign out and sign in again.")
+      setMessage(t("new.verificationSent"))
     } catch (err) {
       console.error("Verification email failed:", err)
-      setError("Could not send the verification email. Check Firebase Authentication settings and try again.")
+      setError(t("new.verificationError"))
     } finally {
       setBusy(false)
     }
@@ -95,34 +97,34 @@ export default function NewRecipePage() {
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-yellow-50 to-amber-50">
       <Header />
       <main className="max-w-3xl mx-auto px-4 py-8">
-        <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
-        <h1 className="text-3xl font-bold my-6">Add a recipe</h1>
+        <Link href="/" className="text-orange-700 underline">{t("new.back")}</Link>
+        <h1 className="text-3xl font-bold my-6">{t("new.title")}</h1>
         {error && <p role="alert" className="text-red-700 mb-4">{error}</p>}
         {message && <p role="status" className="text-green-700 mb-4">{message}</p>}
-        {authLoading ? <p role="status">Checking sign-in...</p> : !user ? (
+        {authLoading ? <p role="status">{t("new.checking")}</p> : !user ? (
           <form onSubmit={handleSignIn} className="space-y-4">
-            <p>Sign in with an administrator account to add recipes.</p>
-            <div><Label htmlFor="email">Email</Label><Input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-            <div><Label htmlFor="password">Password</Label><Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-            <Button disabled={busy} type="submit">{busy ? "Signing in..." : "Sign in"}</Button>
+            <p>{t("new.signInPrompt")}</p>
+            <div><Label htmlFor="email">{t("new.email")}</Label><Input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+            <div><Label htmlFor="password">{t("new.password")}</Label><Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+            <Button disabled={busy} type="submit">{busy ? t("new.signingIn") : t("new.signIn")}</Button>
           </form>
         ) : (
           <>
             <div className="flex items-center justify-between gap-4 mb-6">
-              <p>Signed in as {user.email}</p>
-              <Button type="button" variant="outline" disabled={busy} onClick={handleSignOut}>Sign out</Button>
+              <p>{t("new.signedInAs")} {user.email}</p>
+              <Button type="button" variant="outline" disabled={busy} onClick={handleSignOut}>{t("new.signOut")}</Button>
             </div>
             {!user.emailVerified ? (
               <div className="space-y-4">
-                <p>Verify your email address before adding recipes. After verifying, sign out and sign in again.</p>
-                <Button type="button" disabled={busy} onClick={handleVerification}>Send verification email</Button>
+                <p>{t("new.verifyPrompt")}</p>
+                <Button type="button" disabled={busy} onClick={handleVerification}>{t("new.sendVerification")}</Button>
               </div>
             ) : (
               <RecipeForm
                 imageRequired
-                submitLabel="Save recipe"
-                savingLabel="Saving recipe..."
-                errorMessage="Could not upload the image or save the recipe. Check that your verified email is allowed in both Firebase rules and try again."
+                submitLabel={t("new.saveRecipe")}
+                savingLabel={t("new.savingRecipe")}
+                errorMessage={t("new.saveError")}
                 onBusyChange={setBusy}
                 onSave={async (data, image) => {
                   if (!user || !image) throw new Error("A signed-in user and recipe image are required.")

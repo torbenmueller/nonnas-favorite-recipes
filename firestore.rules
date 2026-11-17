@@ -7,10 +7,42 @@ service cloud.firestore {
         && request.auth.token.email in ['torben.jan.mueller@gmail.com'];
     }
 
+    function validLocalizedContent(content) {
+      return content is map
+        && content.keys().hasOnly([
+          'title', 'category', 'description', 'tip', 'ingredients', 'instructions'
+        ])
+        && content.keys().hasAll([
+          'title', 'category', 'description', 'tip', 'ingredients', 'instructions'
+        ])
+        && content.title is string
+        && content.title.size() > 0
+        && content.title.size() <= 200
+        && content.category is string
+        && content.category.size() > 0
+        && content.category.size() <= 100
+        && content.description is string
+        && content.description.size() <= 2000
+        && content.tip is string
+        && content.tip.size() <= 1000
+        && content.ingredients is list
+        && content.instructions is list;
+    }
+
+    function validTranslations(translations) {
+      return translations is map
+        && translations.keys().hasOnly(['en', 'de', 'it'])
+        && translations.keys().hasAll(['en', 'de', 'it'])
+        && validLocalizedContent(translations.en)
+        && validLocalizedContent(translations.de)
+        && validLocalizedContent(translations.it);
+    }
+
     function validRecipe(recipeId) {
       return request.resource.data.keys().hasOnly([
           'id', 'title', 'category', 'image', 'cookTime', 'servings',
-          'difficulty', 'description', 'tip', 'ingredients', 'instructions'
+          'difficulty', 'description', 'tip', 'ingredients', 'instructions',
+          'translations'
         ])
         && request.resource.data.id == recipeId
         && request.resource.data.title is string
@@ -25,7 +57,9 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['tip'])
           || (request.resource.data.tip is string && request.resource.data.tip.size() <= 1000))
         && request.resource.data.ingredients is list
-        && request.resource.data.instructions is list;
+        && request.resource.data.instructions is list
+        && (!request.resource.data.keys().hasAny(['translations'])
+          || validTranslations(request.resource.data.translations));
     }
 
     match /recipes/{recipeId} {

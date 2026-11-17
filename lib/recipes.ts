@@ -2,6 +2,19 @@ import { z } from "zod"
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { getRecipeDatabase, getRecipeStorage } from "@/lib/firebase"
+import type { Language } from "@/lib/i18n"
+
+const localizedRecipeContentSchema = z.object({
+  title: z.string().min(1),
+  category: z.string().min(1),
+  description: z.string(),
+  tip: z.string().max(1000),
+  ingredients: z.array(z.object({
+    name: z.string().min(1),
+    unit: z.string(),
+  })),
+  instructions: z.array(z.string()),
+})
 
 const recipeSchema = z.object({
   id: z.union([z.number().int().positive(), z.string().regex(/^[A-Za-z0-9_-]+$/)]),
@@ -19,9 +32,31 @@ const recipeSchema = z.object({
     unit: z.string(),
   })),
   instructions: z.array(z.string()),
+  translations: z.object({
+    en: localizedRecipeContentSchema,
+    de: localizedRecipeContentSchema,
+    it: localizedRecipeContentSchema,
+  }).optional(),
 })
 
 export type Recipe = z.infer<typeof recipeSchema>
+export type RecipeTranslation = z.infer<typeof localizedRecipeContentSchema>
+
+export function getRecipeTranslation(recipe: Recipe, language: Language): RecipeTranslation {
+  const translation = recipe.translations?.[language]
+
+  return {
+    title: translation?.title ?? recipe.title,
+    category: translation?.category ?? recipe.category,
+    description: translation?.description ?? recipe.description,
+    tip: translation?.tip ?? recipe.tip,
+    ingredients: recipe.ingredients.map((ingredient, index) => ({
+      name: translation?.ingredients[index]?.name ?? ingredient.name,
+      unit: translation?.ingredients[index]?.unit ?? ingredient.unit,
+    })),
+    instructions: translation?.instructions ?? recipe.instructions,
+  }
+}
 
 function parseRecipe(documentId: string, data: unknown): Recipe {
   const recipe = recipeSchema.parse(data)

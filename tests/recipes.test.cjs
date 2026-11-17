@@ -106,6 +106,41 @@ test("saves recipe-specific tips when creating and updating recipes", async () =
   assert.equal(api.calls.find((call) => call[0] === "updateDoc")[2].tip, "Salt the pasta water.")
 })
 
+test("saves all manual recipe translations and returns the selected language", async () => {
+  const api = loadRecipes()
+  const translation = (title, ingredientName, instruction) => ({
+    title,
+    category: "Pasta",
+    description: `${title} description`,
+    tip: `${title} tip`,
+    ingredients: [{ name: ingredientName, unit: "g" }],
+    instructions: [instruction],
+  })
+  const translations = {
+    en: translation("Pasta", "Noodles", "Boil the noodles."),
+    de: translation("Nudeln", "Nudeln", "Die Nudeln kochen."),
+    it: translation("Pasta", "Pasta", "Cuocere la pasta."),
+  }
+  await api.createRecipe({ ...recipe, translations }, {}, "user1")
+  const saved = api.calls.find((call) => call[0] === "setDoc")[2]
+  assert.equal(saved.translations.de.title, "Nudeln")
+  assert.equal(saved.translations.it.ingredients[0].name, "Pasta")
+  assert.equal(api.getRecipeTranslation({ ...saved, image: "/image.jpg" }, "de").instructions[0], "Die Nudeln kochen.")
+})
+
+test("falls back to the original recipe text when a legacy recipe has no translations", () => {
+  const api = loadRecipes()
+  const localized = api.getRecipeTranslation({
+    ...recipe,
+    id: 1,
+    image: "/image.jpg",
+    tip: "Use fresh basil.",
+  }, "it")
+  assert.equal(localized.title, recipe.title)
+  assert.equal(localized.ingredients[0].name, recipe.ingredients[0].name)
+  assert.equal(localized.tip, "Use fresh basil.")
+})
+
 test("loads older recipes without a tip", async () => {
   const api = loadRecipes({ document: { exists: () => true, id: "1", data: () => ({ ...recipe, id: 1, image: "/image.jpg" }) } })
   assert.equal((await api.getRecipe("1")).tip, "")

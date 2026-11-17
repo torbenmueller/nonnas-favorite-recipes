@@ -57,9 +57,13 @@ Recipe fields `title`, `category`, `image`, `difficulty`, and `description` are
 strings. `tip` is a string of up to 1000 characters; older recipes may omit it.
 `cookTime` and `servings` are numbers; `ingredients` is an array of
 maps with `name` (string), `amount` (number), and `unit` (string);
-`instructions` is an array of strings. Images can use paths in `public`
-or suitable public image URLs. Images uploaded through the form are stored in
-Firebase Storage. Their download URLs are public; do not upload private images.
+`instructions` is an array of strings. New recipes also store a `translations`
+map with `en`, `de`, and `it` entries for the title, category, description,
+tip, ingredient names and units, and instructions. Older documents without
+that map continue to display their existing fields. Images can use paths in
+`public` or suitable public image URLs. Images uploaded through the form are
+stored in Firebase Storage. Their download URLs are public; do not upload
+private images.
 If an image uploads but saving the recipe fails, the page reports this and
 the unused image may need to be removed in the Storage console. Replacing an
 image uploads a new file, leaving the previous file unused; remove it from
@@ -85,3 +89,8 @@ set; changing them requires rebuilding and uploading again.
 Recipe links use `/recipe/?id=<id>`, so recipes added later can be opened
 without rebuilding the site. A browser reload fetches the latest recipe data.
 Firebase usage is subject to its quotas and pricing.
+
+Visitors can choose English, German, or Italian from the language selector in
+the header. The choice is saved in the browser. New recipes require their text
+to be entered in all three languages; existing recipes without translations
+continue to display their original text. Legal documents remain in English.

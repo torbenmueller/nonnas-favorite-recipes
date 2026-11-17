@@ -12,12 +12,14 @@ import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { RecipeForm } from "@/components/recipe-form"
 import { getRecipeAuth } from "@/lib/firebase"
-import { getRecipe, type Recipe, updateRecipe } from "@/lib/recipes"
+import { getRecipe, getRecipeTranslation, type Recipe, updateRecipe } from "@/lib/recipes"
 import Link from "next/link"
+import { translateIngredientUnit, useLanguage } from "@/lib/i18n"
 
 const ADMIN_EMAILS = ["torben.jan.mueller@gmail.com"]
 
 export default function RecipePage() {
+  const { language, t } = useLanguage()
   const router = useRouter()
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [user, setUser] = useState<User | null>(null)
@@ -54,15 +56,15 @@ export default function RecipePage() {
   }, [])
 
   if (loading) {
-    return <p className="min-h-screen flex items-center justify-center text-center" role="status">Loading recipe...</p>
+    return <p className="min-h-screen flex items-center justify-center text-center" role="status">{t("recipe.loading")}</p>
   }
 
   if (error || !recipe) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{error ? "Could not load recipe. Please try again later." : "Recipe not found"}</h1>
-          <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{error ? t("recipe.loadError") : t("recipe.notFound")}</h1>
+          <Link href="/" className="text-orange-700 underline">{t("recipe.back")}</Link>
         </div>
       </div>
     )
@@ -70,6 +72,7 @@ export default function RecipePage() {
 
   const multiplier = servings / recipe.servings
   const isAdmin = Boolean(user?.emailVerified && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase()))
+  const content = getRecipeTranslation(recipe, language)
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -81,6 +84,19 @@ export default function RecipePage() {
         return "bg-red-100 text-red-800"
       default:
         return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case "Easy":
+        return t("difficulty.easy")
+      case "Medium":
+        return t("difficulty.medium")
+      case "Hard":
+        return t("difficulty.hard")
+      default:
+        return difficulty
     }
   }
 
@@ -98,19 +114,19 @@ export default function RecipePage() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="text-orange-700 underline">Back to recipes</Link>
-          {isAdmin && !editing && <Button type="button" variant="outline" onClick={() => setEditing(true)}>Edit recipe</Button>}
+          <Link href="/" className="text-orange-700 underline">{t("recipe.back")}</Link>
+          {isAdmin && !editing && <Button type="button" variant="outline" onClick={() => setEditing(true)}>{t("recipe.edit")}</Button>}
         </div>
 
         {editing && user && (
           <Card className="mt-6">
-            <CardHeader><CardTitle>Edit recipe</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{t("recipe.edit")}</CardTitle></CardHeader>
             <CardContent>
               <RecipeForm
                 recipe={recipe}
-                submitLabel="Save changes"
-                savingLabel="Saving changes..."
-                errorMessage="Could not update the recipe. Check your Firebase permissions and try again."
+                submitLabel={t("recipe.saveChanges")}
+                savingLabel={t("recipe.savingChanges")}
+                errorMessage={t("recipe.updateError")}
                 onCancel={() => setEditing(false)}
                 onSave={async (data, image) => {
                   const updatedRecipe = await updateRecipe(String(recipe.id), data, recipe.image, image, user.uid)
@@ -128,22 +144,22 @@ export default function RecipePage() {
           <CardImage src={recipe.image} alt={recipe.title} />
 
           <div className="flex flex-wrap items-center gap-3 my-4">
-            <Badge variant="outline" className="text-sm border-transparent bg-gray-200 text-gray-800">{recipe.category}</Badge>
-            <Badge variant="outline" className={`text-sm border-transparent ${getDifficultyColor(recipe.difficulty)}`}>{recipe.difficulty}</Badge>
+            <Badge variant="outline" className="text-sm border-transparent bg-gray-200 text-gray-800">{content.category}</Badge>
+            <Badge variant="outline" className={`text-sm border-transparent ${getDifficultyColor(recipe.difficulty)}`}>{getDifficultyLabel(recipe.difficulty)}</Badge>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{recipe.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{content.title}</h1>
 
-          <p className="text-lg text-gray-700 mb-6">{recipe.description}</p>
+          <p className="text-lg text-gray-700 mb-6">{content.description}</p>
 
           <div className="flex items-center gap-6 text-gray-500">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
-              <span>{recipe.cookTime} minutes</span>
+              <span>{recipe.cookTime} {t("recipe.minutes")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              <span>{recipe.servings} servings</span>
+              <span>{recipe.servings} {t("recipe.servings")}</span>
             </div>
           </div>
         </div>
@@ -153,7 +169,7 @@ export default function RecipePage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Ingredients</span>
+                <span>{t("recipe.ingredients")}</span>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -164,7 +180,7 @@ export default function RecipePage() {
                     <Minus className="h-4 w-4" />
                   </Button>
                   <span className="text-sm font-normal px-3">
-                    {servings} {servings === 1 ? "serving" : "servings"}
+                    {servings} {servings === 1 ? t("recipe.serving") : t("recipe.servings")}
                   </span>
                   <Button variant="outline" size="sm" onClick={() => setServings(servings + 1)}>
                     <Plus className="h-4 w-4" />
@@ -176,9 +192,9 @@ export default function RecipePage() {
               <ul className="space-y-3">
                 {recipe.ingredients.map((ingredient, index) => (
                   <li key={index} className="flex justify-between items-center">
-                    <span className="text-gray-700">{ingredient.name}</span>
+                    <span className="text-gray-700">{content.ingredients[index]?.name ?? ingredient.name}</span>
                     <span className="font-medium">
-                      {formatAmount(ingredient.amount)} {ingredient.unit}
+                      {formatAmount(ingredient.amount)} {translateIngredientUnit(content.ingredients[index]?.unit ?? ingredient.unit, language)}
                     </span>
                   </li>
                 ))}
@@ -189,11 +205,11 @@ export default function RecipePage() {
           {/* Instructions */}
           <Card>
             <CardHeader>
-              <CardTitle>Instructions</CardTitle>
+              <CardTitle>{t("recipe.instructions")}</CardTitle>
             </CardHeader>
             <CardContent>
               <ol className="space-y-4">
-                {recipe.instructions.map((instruction, index) => (
+                {content.instructions.map((instruction, index) => (
                   <li key={index} className="flex gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
                       {index + 1}
@@ -211,16 +227,13 @@ export default function RecipePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ChefHat className="h-8 w-8 text-amber-600" />
-              Nonna's Tip
+              {t("recipe.tip")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <p className="text-gray-700">
-                {recipe.tip || "For the best results with Italian cooking, always use high-quality " +
-                "ingredients. Fresh herbs, good olive oil, and authentic Italian cheeses make all the difference in " +
-                "flavor. Don't rush the cooking process - Italian cuisine is about taking time to let flavors develop " +
-                "naturally."}
+                {content.tip || t("recipe.defaultTip")}
               </p>
             </div>
           </CardContent>

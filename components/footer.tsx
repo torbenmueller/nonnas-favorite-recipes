@@ -4,12 +4,14 @@ import { usePathname, useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { siFacebook, siInstagram, siX, siYoutube } from "simple-icons"
 import { scrollToTop, scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
+import { useLanguage } from "@/lib/i18n"
 
 interface FooterProps {
   onCategorySelect: (category: string) => void
 }
 
 export function Footer({ onCategorySelect }: FooterProps) {
+  const { t } = useLanguage()
   const currentYear = format(new Date(), 'yyyy')
   const pathname = usePathname()
   const router = useRouter()
@@ -37,8 +39,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
               <h3 className="text-xl font-bold text-gray-900">Nonna's Favorite Recipes</h3>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Bringing authentic Italian recipes from our family to yours. Discover the true flavors of Italy with
-              traditional recipes passed down through generations.
+              {t("footer.description")}
             </p>
             <div className="flex space-x-4">
               <Link href="https://www.facebook.com/profile.php?id=100071947813879" target="_blank" className="text-gray-600 hover:text-orange-600 transition-colors">
@@ -62,19 +63,19 @@ export function Footer({ onCategorySelect }: FooterProps) {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t("footer.quickLinks")}</h4>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-600 hover:text-orange-600 transition-colors text-sm" onClick={(e) => {
                   e.preventDefault()
                   selectCategory("All")
                 }}>
-                  All Recipes
+                  {t("footer.allRecipes")}
                 </Link>
               </li>
               <li>
                 <Link href="/recipe/new" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  Add a Recipe
+                  {t("footer.addRecipe")}
                 </Link>
               </li>
               <li>
@@ -82,7 +83,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                   e.preventDefault()
                   selectCategory("Pasta")
                 }}>
-                  Pasta Recipes
+                  {t("footer.pastaRecipes")}
                 </Link>
               </li>
               <li>
@@ -94,7 +95,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                     selectCategory("Risotto")
                   }}
                 >
-                  Risotto Recipes
+                  {t("footer.risottoRecipes")}
                 </Link>
               </li>
               <li>
@@ -106,7 +107,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                     selectCategory("Antipasti")
                   }}
                 >
-                  Antipasti Recipes
+                  {t("footer.antipastiRecipes")}
                 </Link>
               </li>
               <li>
@@ -118,7 +119,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                     selectCategory("Soups")
                   }}
                 >
-                  Italian Soups
+                  {t("footer.soups")}
                 </Link>
               </li>
               <li>
@@ -130,7 +131,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
                     selectCategory("Desserts")
                   }}
                 >
-                  Italian Desserts
+                  {t("footer.desserts")}
                 </Link>
               </li>
             </ul>
@@ -138,7 +139,7 @@ export function Footer({ onCategorySelect }: FooterProps) {
 
           {/* Contact Information */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Contact Us</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t("footer.contact")}</h4>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-orange-600" />
@@ -161,72 +162,32 @@ export function Footer({ onCategorySelect }: FooterProps) {
 
            {/* Legal Information */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Legal Information</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t("footer.legal")}</h4>
             <ul className="space-y-2">
               <li>
                 <Link href="/legal/privacy-policy" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  Privacy Policy
+                  {t("footer.privacy")}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/terms-and-conditions" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  Terms and Conditions
+                  {t("footer.terms")}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/imprint" className="text-gray-600 hover:text-orange-600 transition-colors text-sm">
-                  Imprint
+                  {t("footer.imprint")}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Stay Updated</h4>
-            <p className="text-gray-600 text-sm">Subscribe to our newsletter for new recipes and cooking tips!</p>
-            <form
-              action="https://nonnas-favorite-recipes.us6.list-manage.com/subscribe/post?u=ab34b074927fdf20b97be28b5&amp;id=7f2ddad826&amp;f_id=001d5ee0f0"
-              method="post"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="space-y-2"
-            >
-              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-              <input
-                id="newsletter-email"
-                type="email"
-                name="EMAIL"
-                placeholder="Your email address"
-                autoComplete="email"
-                required
-                className="w-full px-3 py-2 border border-orange-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-              <label className="flex items-start gap-2 text-sm text-gray-700">
-                <input type="checkbox" required className="mt-1" />
-                <span>
-                  I agree to receive the newsletter and have read the{" "}
-                  <Link className="link" href="/legal/privacy-policy">Privacy Policy</Link>.
-                </span>
-              </label>
-              <div aria-hidden="true" className="absolute -left-[5000px]">
-                <input type="text" name="b_ab34b074927fdf20b97be28b5_7f2ddad826" tabIndex={-1} autoComplete="off" />
-              </div>
-              <button type="submit" className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:from-orange-700 hover:to-red-700 transition-colors">
-                Subscribe
-              </button>
-              <p className="text-xs text-gray-600">Mailchimp will open in a new tab to complete your signup.</p>
-              <a href="http://eepurl.com/C8gAUoCryu" target="_blank" rel="noopener noreferrer" className="inline-block">
-                <img src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" width={220} height={40} />
-              </a>
-            </form>
-          </div>
         </div>
 
         {/* Bottom Section */}
         <div className="border-t border-orange-300 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-            <div className="text-gray-600 text-sm">© {currentYear} Nonna's Favorite Recipes. All rights reserved.</div>
+            <div className="text-gray-600 text-sm">© {currentYear} Nonna's Favorite Recipes. {t("footer.allRights")}</div>
           </div>
         </div>
       </div>
