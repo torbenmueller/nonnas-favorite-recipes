@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
+import { useLanguage } from "@/lib/i18n"
 
 export default function TermsAndConditionsPage() {
   const router = useRouter()
+  const { t } = useLanguage()
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-red-50 to-green-50">
@@ -16,45 +18,45 @@ export default function TermsAndConditionsPage() {
           <button type="button" onClick={() => {
             scrollToTopOnNextNavigation()
             router.back()
-          }} className="text-orange-700 underline">Back to previous page</button>
+          }} className="text-orange-700 underline">{t("legal.back")}</button>
           
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900">Terms and Conditions</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-900">{t("terms.title")}</h1>
             <div className="prose prose-orange max-w-none">
-              <h2 className="font-semibold mb-1">1. Acceptance of Terms</h2>
-              <p className="mb-4">By using Nonna's Favorite Recipes, you agree to these Terms and Conditions. If you do not agree, please do not use our website.</p>
+              <h2 className="font-semibold mb-1">{t("terms.acceptance")}</h2>
+              <p className="mb-4">{t("terms.acceptanceText")}</p>
 
-              <h2 className="font-semibold mb-1">2. Content Usage</h2>
-              <p className="mb-1">All content on our website, including recipes, photos, and text, is protected by copyright. You may:</p>
+              <h2 className="font-semibold mb-1">{t("terms.content")}</h2>
+              <p className="mb-1">{t("terms.contentLead")}</p>
               <ul className="mb-4 list-disc list-inside">
-                <li>View content for personal, non-commercial use</li>
-                <li>Share links to our content</li>
-                <li>Print recipes for personal use</li>
+                <li>{t("terms.contentView")}</li>
+                <li>{t("terms.contentShare")}</li>
+                <li>{t("terms.contentPrint")}</li>
               </ul>
-              <p className="mb-1">You may not:</p>
+              <p className="mb-1">{t("terms.contentNotAllowedLead")}</p>
               <ul className="mb-4 list-disc list-inside">
-                <li>Copy or distribute content without permission</li>
-                <li>Use content for commercial purposes</li>
-                <li>Modify or create derivative works</li>
-              </ul>
-
-              <h2 className="font-semibold mb-1">3. User Conduct</h2>
-              <p className="mb-1">You agree to:</p>
-              <ul className="mb-4 list-disc list-inside">
-                <li>Use the website in a legal and ethical manner</li>
-                <li>Respect other users' rights and privacy</li>
-                <li>Not post inappropriate or harmful content</li>
+                <li>{t("terms.contentCopy")}</li>
+                <li>{t("terms.contentCommercial")}</li>
+                <li>{t("terms.contentModify")}</li>
               </ul>
 
-              <h2 className="font-semibold mb-1">4. Disclaimer</h2>
-              <p className="mb-4">The recipes and information provided are for general guidance only. We do not guarantee the results of any recipes and are not liable for any damages arising from their use.</p>
+              <h2 className="font-semibold mb-1">{t("terms.conduct")}</h2>
+              <p className="mb-1">{t("terms.conductLead")}</p>
+              <ul className="mb-4 list-disc list-inside">
+                <li>{t("terms.conductLegal")}</li>
+                <li>{t("terms.conductRespect")}</li>
+                <li>{t("terms.conductContent")}</li>
+              </ul>
 
-              <h2 className="font-semibold mb-1">5. Changes to Terms</h2>
-              <p className="mb-4">We may update these Terms and Conditions at any time. Your continued use of the website constitutes acceptance of any changes.</p>
+              <h2 className="font-semibold mb-1">{t("terms.disclaimer")}</h2>
+              <p className="mb-4">{t("terms.disclaimerText")}</p>
 
-              <h2 className="font-semibold mb-1">6. Contact Us</h2>
-              <p>If you have any questions about these Terms and Conditions, please contact us at:</p>
-              <p>Email: <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></p>
+              <h2 className="font-semibold mb-1">{t("terms.changes")}</h2>
+              <p className="mb-4">{t("terms.changesText")}</p>
+
+              <h2 className="font-semibold mb-1">{t("terms.contact")}</h2>
+              <p>{t("terms.contactText")}</p>
+              <p>{t("terms.email")} <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></p>
             </div>
           </div>
         </div>

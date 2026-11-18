@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
+import { useLanguage } from "@/lib/i18n"
 
 export default function PrivacyPolicyPage() {
   const router = useRouter()
+  const { t } = useLanguage()
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-red-50 to-green-50">
@@ -16,47 +18,47 @@ export default function PrivacyPolicyPage() {
           <button type="button" onClick={() => {
             scrollToTopOnNextNavigation()
             router.back()
-          }} className="text-orange-700 underline">Back to previous page</button>
+          }} className="text-orange-700 underline">{t("legal.back")}</button>
           
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900">Privacy Policy</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-900">{t("privacy.title")}</h1>
             <div className="prose prose-orange max-w-none">
-              <h2 className="font-semibold mb-1">1. Introduction</h2>
-              <p className="mb-4">Welcome to Nonna's Favorite Recipes. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.</p>
+              <h2 className="font-semibold mb-1">{t("privacy.introduction")}</h2>
+              <p className="mb-4">{t("privacy.introductionText")}</p>
 
-              <h2 className="font-semibold mb-1">2. Information We Collect</h2>
-              <p className="mb-1">We collect information that you provide to us directly, such as:</p>
+              <h2 className="font-semibold mb-1">{t("privacy.collect")}</h2>
+              <p className="mb-1">{t("privacy.collectLead")}</p>
               <ul className="mb-4 list-disc list-inside">
-                <li>Email address when you subscribe to our newsletter</li>
-                <li>Recipe ratings and reviews</li>
-                <li>Contact information if you reach out to us</li>
+                <li>{t("privacy.collectNewsletter")}</li>
+                <li>{t("privacy.collectReviews")}</li>
+                <li>{t("privacy.collectContact")}</li>
               </ul>
 
-              <h2 className="font-semibold mb-1">3. How We Use Your Information</h2>
-              <p className="mb-1">We use your information to:</p>
+              <h2 className="font-semibold mb-1">{t("privacy.use")}</h2>
+              <p className="mb-1">{t("privacy.useLead")}</p>
               <ul className="mb-4 list-disc list-inside">
-                <li>Send you our newsletter if you subscribe</li>
-                <li>Respond to your inquiries</li>
-                <li>Improve our website and services</li>
+                <li>{t("privacy.useNewsletter")}</li>
+                <li>{t("privacy.useRespond")}</li>
+                <li>{t("privacy.useImprove")}</li>
               </ul>
 
-              <h2 className="font-semibold mb-1">4. Data Protection</h2>
-              <p className="mb-4">We take appropriate security measures to protect your personal information. Newsletter signup information is submitted to Mailchimp, which processes it to manage subscriptions and send newsletters.</p>
+              <h2 className="font-semibold mb-1">{t("privacy.protection")}</h2>
+              <p className="mb-4">{t("privacy.protectionText")}</p>
 
-              <h2 className="font-semibold mb-1">5. Your Rights</h2>
-              <p className="mb-1">You have the right to:</p>
+              <h2 className="font-semibold mb-1">{t("privacy.rights")}</h2>
+              <p className="mb-1">{t("privacy.rightsLead")}</p>
               <ul className="mb-4 list-disc list-inside">
-                <li>Access your personal information</li>
-                <li>Request corrections</li>
-                <li>Request deletion</li>
+                <li>{t("privacy.rightsAccess")}</li>
+                <li>{t("privacy.rightsCorrection")}</li>
+                <li>{t("privacy.rightsDeletion")}</li>
               </ul>
 
-              <h2 className="font-semibold mb-1">6. Updates to this Policy</h2>
-              <p className="mb-4">We may update this Privacy Policy from time to time. Any changes will be posted on this page.</p>
+              <h2 className="font-semibold mb-1">{t("privacy.updates")}</h2>
+              <p className="mb-4">{t("privacy.updatesText")}</p>
 
-              <h2 className="font-semibold mb-1">7. Contact Us</h2>
-              <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-              <p>Email: <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></p>
+              <h2 className="font-semibold mb-1">{t("privacy.contact")}</h2>
+              <p>{t("privacy.contactText")}</p>
+              <p>{t("privacy.email")} <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a></p>
             </div>
           </div>
         </div>

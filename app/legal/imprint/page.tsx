@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { scrollToTopOnNextNavigation } from "@/components/scroll-to-top-on-navigation"
+import { useLanguage } from "@/lib/i18n"
 
 export default function ImprintPage() {
   const router = useRouter()
+  const { t } = useLanguage()
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-red-50 to-green-50">
@@ -16,36 +18,36 @@ export default function ImprintPage() {
           <button type="button" onClick={() => {
             scrollToTopOnNextNavigation()
             router.back()
-          }} className="text-orange-700 underline">Back to previous page</button>
+          }} className="text-orange-700 underline">{t("legal.back")}</button>
           
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900">Imprint</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-900">{t("imprint.title")}</h1>
             <div className="prose prose-orange max-w-none">
-              <h2 className="font-semibold mb-1">Responsible for Content</h2>
+              <h2 className="font-semibold mb-1">{t("imprint.responsible")}</h2>
               <p className="mb-4">Nonna's Favorite Recipes<br/>
               Torben Jan Müller<br/>
               Am Hammershöfchen 23<br/>
               45219 Essen<br/>
-              Germany</p>
+              {t("imprint.country")}</p>
 
-              <h2 className="font-semibold mb-1">Contact Information</h2>
-              <p className="mb-4">Email: <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a><br/>
-              Phone: +49 +49 151 284 720 59</p>
+              <h2 className="font-semibold mb-1">{t("imprint.contact")}</h2>
+              <p className="mb-4">{t("imprint.email")} <a className="link" href="mailto:info@nonnas-favorite-recipes.com">info@nonnas-favorite-recipes.com</a><br/>
+              {t("imprint.phone")} +49 151 284 720 59</p>
 
-              <h2 className="font-semibold mb-1">Responsible for Content according to § 55 Abs. 2 RStV</h2>
+              <h2 className="font-semibold mb-1">{t("imprint.responsibleRstv")}</h2>
               <p className="mb-4">Torben Jan Müller<br/>
               Am Hammershöfchen 23<br/>
               45219 Essen<br/>
-              Germany</p>
+              {t("imprint.country")}</p>
 
-              <h2 className="font-semibold mb-1">Disclaimer</h2>
-              <p className="mb-4">The content of this website has been created with the utmost care. However, we cannot guarantee the accuracy, completeness, and timeliness of the information provided.</p>
+              <h2 className="font-semibold mb-1">{t("imprint.disclaimer")}</h2>
+              <p className="mb-4">{t("imprint.disclaimerText")}</p>
 
-              <h2 className="font-semibold mb-1">External Links</h2>
-              <p className="mb-4">Our website contains links to external third-party websites. We have no influence on the content of these websites and cannot accept any liability for them.</p>
+              <h2 className="font-semibold mb-1">{t("imprint.externalLinks")}</h2>
+              <p className="mb-4">{t("imprint.externalLinksText")}</p>
 
-              <h2 className="font-semibold mb-1">Legal Notice</h2>
-              <p>This imprint was created using the <a className="link" href="https://www.impressum-generator.de">Impressum Generator</a> of <a className="link" href="https://www.impressum-generator.de">impressum-generator.de</a> and the <a className="link" href="https://www.anwaltskanzlei-weiss.de">Law Office of Dr. Thomas Schwenke</a>.</p>
+              <h2 className="font-semibold mb-1">{t("imprint.legalNotice")}</h2>
+              <p>{t("imprint.notice.before")}<a className="link" href="https://www.impressum-generator.de">{t("imprint.notice.generator")}</a>{t("imprint.notice.middle")}<a className="link" href="https://www.impressum-generator.de">impressum-generator.de</a>{t("imprint.notice.and")}<a className="link" href="https://www.anwaltskanzlei-weiss.de">{t("imprint.notice.lawOffice")}</a>{t("imprint.notice.end")}</p>
             </div>
           </div>
         </div>
